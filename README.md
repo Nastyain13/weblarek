@@ -113,6 +113,9 @@ private - модификатор доступа.
                                                 this.selectedProduct = product;             
 получение товара для подробного отображения. getSelectedProduct(): IProduct | null {
                                                 return this.selectedProduct;
+
+
+
 2. Корзина Cart.ts; класс Cart - корзина покупок.
 Методы:
  массив товаров, хранящий все товары, добавленные в корзину- private items: IProduct[];
