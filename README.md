@@ -101,6 +101,8 @@ Presenter - презентер содержит основную логику п
 Данные :
 
 Описаны следующие три класса в отдельных файлах :
+
+
 1.каталог товаров Catalog.ts.  Class Catalog хранит массив всех товаров; хранит товар, выбранный для подробного отображения;
 private products: IProduct[] = []; - массив товаров, хранит все товары
 private selectedProduct: IProduct | null = null;  - выбранный товар;
@@ -149,9 +151,11 @@ private payment: TPayment | null - способ оплаты, выбранный
  файл ApiClient.ts  Класс ApiClient отвечает за взаимодействие с серверным API. 
  конструктор constructor(api: IApi)
  Параметр api: IApi
+
  методы:
+
  Получает каталог товаров с сервера  async getProducts(): Promise<IProduct[]> {
-Отправляет заказ на сервер для обработки async createOrder(orderData: IOrderData): Promise<IOrderResult> 
+ Отправляет заказ на сервер для обработки async createOrder(orderData: IOrderData): Promise<IOrderResult> 
  В файле main.ts - экземпляры классов Сart, Catalog, Customer,  - нужно для проверки работы моделей данных.
 Экземпляр класса ApiClient - получение данных с сервера и отправку данных на сервер.
  
