@@ -99,14 +99,57 @@ Presenter - презентер содержит основную логику п
 `trigger<T extends object>(event: string, context?: Partial<T>): (data: T) => void` - возвращает функцию, при вызове которой инициализируется требуемое в параметрах событие с передачей в него данных из второго параметра.
 Данные :
 Описаны следующие три класса в отдельных файлах :
-каталог товаров Catalog.ts:
-Корзина Cart.ts;
-Покупатели Customer.ts;
+1.каталог товаров Catalog.ts.  Class Catalog хранит массив всех товаров; хранит товар, выбранный для подробного отображения;
+ private products: IProduct[] = []; - массив товаров, хранит все товары
+  private selectedProduct: IProduct | null = null;  - выбранный товар;
+  private - модификатор доступа.
+   методы:
+сохранение массива товаров полученного в параметрах метода setProducts(products: IProduct[]): void-  записывает/устанавливает  весь массив товаров в каталоге. 
+получение массива товаров из модели -   getProducts(): IProduct[]  геттер(прочитать получить данные)
+получение одного товара по его id  - getProductById(id: string): IProduct | null {   
+сохранение товара для подробного отображения - setSelectedProduct(product: IProduct): void                                 
+                                                this.selectedProduct = product;             
+получение товара для подробного отображения. getSelectedProduct(): IProduct | null {
+                                                return this.selectedProduct;
+2. Корзина Cart.ts; класс Cart - корзина покупок.
+Методы:
+ массив товаров, хранящий все товары, добавленные в корзину- private items: IProduct[];
+Получение массива товаров, которые находятся в корзине getItems(): IProduct[];
+Добавление товара, который был получен в параметре, в массив корзины addItem(product: IProduct): void; 
+ Удаление товара, полученного в параметре из массива корзины removeItem(product: IProduct): void   
+ Очистка корзиныclear(): void 
+ Получение стоимости всех товаров в корзине getTotalPrice(): number   
+ Получение количества товаров в корзине getItemsCount(): number 
+ Проверка наличия товара в корзине по его id, полученного в параметр метода- hasItem(productId: string): boolean 
 
-Использует композицию: принимает в конструкторе объект, реализующий интерфейс IApi
+3. Покупатели Customer.ts. класс Customer - данные покупателя в приложении.
+private payment: TPayment | null - способ оплаты, выбранный покупателем (может быть null если не выбран)
+методы:
+Сохранение данных покупателя (общий метод) - setData(data: Partial<IBuyer>): void ;
+ Сохранение отдельных полей - setPayment(payment: TPayment): void; setEmail(email: string): void , setPhone(phone: string): void , setAddress(address: string): void,
+ Получение всех данных покупателя - getData(): IBuyer;
+ Получение текущих данных (частично заполненных) - getCurrentData(): Partial<IBuyer> ;
+ Очистка данных покупателя - clear(): void 
+ Проверка, все ли данные заполнены
+  isComplete(): boolean {
+    return !!this.payment && !!this.email && !!this.phone && !!this.address;
+  }
+Валидация данных
+  validate(): IValidationResult {
+    const errors: IValidationResult['errors'] = {}
+ Валидация отдельного поля
+  validateField(field: keyof IBuyer): { isValid: boolean; error?: string } 
 
-Делегирует выполнение HTTP-запросов методам get и post базового Api
 
-Инкапсулирует работу с конкретными эндпоинтами API (/product/ и /order/)
-
+Класс ApiClient отвечает за взаимодействие с серверным API. 
+ конструктор constructor(api: IApi)
+ Параметр api: IApi
+ методы:
+ Получает каталог товаров с сервера  async getProducts(): Promise<IProduct[]> {
+Отправляет заказ на сервер для обработки async createOrder(orderData: IOrderData): Promise<IOrderResult> 
+ В файле main.ts - экземпляры классов Сart, Catalog, Customer, Класс ApiClient - нужно для проверки работы моделей данных.
+ 
+ 
+    
+ 
 
