@@ -153,9 +153,10 @@ private payment: TPayment | null - способ оплаты, выбранный
  Параметр api: IApi
 
  методы:
-
- Получает каталог товаров с сервера  async getProducts(): Promise<IProduct[]> {
+Получает каталог товаров с сервера  async getProducts(): Promise<IProduct[]> {
  Отправляет заказ на сервер для обработки async createOrder(orderData: IOrderData): Promise<IOrderResult> 
+ 
+ 
  В файле main.ts - экземпляры классов Сart, Catalog, Customer,  - нужно для проверки работы моделей данных.
 Экземпляр класса ApiClient - получение данных с сервера и отправку данных на сервер.
  
