@@ -97,7 +97,9 @@ Presenter - презентер содержит основную логику п
 `on<T extends object>(event: EventName, callback: (data: T) => void): void` - подписка на событие, принимает название события и функцию обработчик.  
 `emit<T extends object>(event: string, data?: T): void` - инициализация события. При вызове события в метод передается название события и объект с данными, который будет использован как аргумент для вызова обработчика.  
 `trigger<T extends object>(event: string, context?: Partial<T>): (data: T) => void` - возвращает функцию, при вызове которой инициализируется требуемое в параметрах событие с передачей в него данных из второго параметра.
+
 Данные :
+
 Описаны следующие три класса в отдельных файлах :
 1.каталог товаров Catalog.ts.  Class Catalog хранит массив всех товаров; хранит товар, выбранный для подробного отображения;
  private products: IProduct[] = []; - массив товаров, хранит все товары
@@ -141,14 +143,14 @@ private payment: TPayment | null - способ оплаты, выбранный
   validateField(field: keyof IBuyer): { isValid: boolean; error?: string } 
 
 
-Класс ApiClient отвечает за взаимодействие с серверным API. 
+ файл ApiClient.ts  Класс ApiClient отвечает за взаимодействие с серверным API. 
  конструктор constructor(api: IApi)
  Параметр api: IApi
  методы:
  Получает каталог товаров с сервера  async getProducts(): Promise<IProduct[]> {
 Отправляет заказ на сервер для обработки async createOrder(orderData: IOrderData): Promise<IOrderResult> 
- В файле main.ts - экземпляры классов Сart, Catalog, Customer, Класс ApiClient - нужно для проверки работы моделей данных.
- 
+ В файле main.ts - экземпляры классов Сart, Catalog, Customer,  - нужно для проверки работы моделей данных.
+Экземпляр класса ApiClient - получение данных с сервера и отправку данных на сервер.
  
     
  
