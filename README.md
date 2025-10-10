@@ -180,7 +180,35 @@ private payment: TPayment | null - способ оплаты, выбранный
 -формы;
 - Карточки товара, товар.
 
+Header
+ Шапка сайта, отображает логотип, счётчик корзины и кнопки.
 
+constructor(protected events: IEvents, container: HTMLElement) {
+        super(container);
+        
+Поля:
+protected counterElement: HTMLElement; 
+protected basketButton: HTMLButtonElement;
 
- 
+Методы:
+ set counter(value: number) - Устанавливает значение счетчика корзины
+
+ abstract class Card 
+  Абстрактный базовый класс карточки каталога
+
+Конструктор: (container: HTMLElement) 
+Поля:
+id: string — идентификатор товара.
+titleEl: HTMLElement — узел заголовка.
+imageEl: HTMLImageElement — узел изображения.
+categoryEl: HTMLElement — узел категории.
+priceEl: HTMLElement — узел цены.
+Методы:
+setId(id: string): void
+setTitle(title: string): void
+setImage(src: string, alt?: string): void
+setCategory(category: string): void
+setPrice(price: number | null): void — отображает «Бесценно» при null.
+onClick(handler: (id: string) => void): void — общий обработчик клика по карточке.
+render(data: TCard): HTMLElement — 
 
