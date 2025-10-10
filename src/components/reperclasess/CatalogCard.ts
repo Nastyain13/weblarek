@@ -1,6 +1,8 @@
-import { Component } from "../base/Component";
+import { Component } from "../base/Component";                       //класс всего католога
 import { ensureElement } from "../../utils/utils";
 import { IProduct } from "../../types";
+
+
 
 export class CatalogCard extends Component<void> {
   protected gallery: HTMLElement;

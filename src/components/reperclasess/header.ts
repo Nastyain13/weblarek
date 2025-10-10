@@ -10,10 +10,11 @@ interface IHeader {
     counter: number;
 }
 
-/**
- * Класс компонента заголовка страницы
- * Отвечает за отображение счетчика корзины и обработку клика по корзине
- */
+//
+ // Класс компонента заголовка страницы
+ 
+ //Отвечает за отображение счетчика корзины и обработку клика по корзине
+ 
 export class Header extends Component<IHeader> {
     protected counterElement: HTMLElement;
     protected basketButton: HTMLButtonElement;
@@ -30,10 +31,9 @@ export class Header extends Component<IHeader> {
         });
     }
 
-    /**
-     * Устанавливает значение счетчика корзины
-     * @param {number} value - новое значение счетчика
-     */
+    
+     // Устанавливает значение счетчика корзины
+     
     set counter(value: number) {
         this.counterElement.textContent = String(value);
     }

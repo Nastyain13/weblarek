@@ -1,5 +1,5 @@
 import { ensureElement } from "../../utils/utils";
-import { Card } from './card';
+import { Card } from './cards/card';
 import { IProduct } from "../../types";
 
 interface IBasketCard {

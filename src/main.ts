@@ -7,8 +7,8 @@ import { cloneTemplate, ensureElement } from "./utils/utils";
 import { EventEmitter } from "./components/base/Events";
 import { Modal } from './components/reperclasess/modal';
 import { CatalogCard } from './components/reperclasess/CatalogCard';
-import { CatalogItem } from './components/reperclasess/CatalogItem';
-import { PreviewCard } from './components/reperclasess/PreviewCard';
+import { CatalogItem } from './components/reperclasess/cards/CatalogItem';
+import { PreviewCard } from './components/reperclasess/cards/PreviewCard';
 import { BasketCard } from './components/reperclasess/basketCard';
 import { OrderForm } from "./components/reperclasess/forms/OrderForm";
 import { ContactsForm } from "./components/reperclasess/forms/ContactsForm";
@@ -48,7 +48,6 @@ const baseApi = new Api(API_URL);
 const apiClient = new ApiClient(baseApi);
 
 
-
 // Изменение каталога товаров
 (catalogModel as any).on('catalog:changed', (products: IProduct[]) => {
     console.log('Каталог обновлен, товаров:', products.length);
@@ -57,10 +56,10 @@ const apiClient = new ApiClient(baseApi);
     products.forEach(product => {
         const cardElement = cloneTemplate<HTMLElement>(cardCatalogTemplate);
         
-        const catalogItem = new CatalogItem(cardElement, () => {
+        const catalogItem = new CatalogItem(cardElement);
+        catalogItem.onClick(() => {
             events.emit('product:select', { id: product.id });
         });
-        
         catalogItem.product = product;
         productCards.push(cardElement);
     });
@@ -81,14 +80,10 @@ const apiClient = new ApiClient(baseApi);
     modal.open(previewElement);
 });
 
-
-
-//  Изменение содержимого корзины
+// Изменение содержимого корзины
 function updateBasketCounter() {
     basketCounter.textContent = cartModel.getItemsCount().toString();
 }
-
-
 
 // Обновляем счетчик при удалении товара
 events.on('product:removeFromCart', (data: { id: string }) => {
@@ -96,14 +91,10 @@ events.on('product:removeFromCart', (data: { id: string }) => {
     updateBasketCounter(); 
 });
 
-
-
-//  Изменение данных покупателя
+// Изменение данных покупателя
 (customerModel as any).on('customer:changed', () => {
     console.log('Данные покупателя обновлены:', customerModel.getCurrentData());
 });
-
-
 
 // Выбор карточки для просмотра
 events.on('product:select', (data: { id: string }) => {
@@ -113,20 +104,22 @@ events.on('product:select', (data: { id: string }) => {
     }
 });
 
-//  Нажатие кнопки покупки товара
+// Нажатие кнопки покупки товара
 events.on('product:addToCart', (data: { id: string }) => {
     const product = catalogModel.getProductById(data.id);
     if (product && product.price !== null) {
         cartModel.addItem(product);
+        updateBasketCounter();
         modal.close();
     }
 });
 
-//  Нажатие кнопки удаления товара из корзины
+// Нажатие кнопки удаления товара из корзины
 events.on('product:removeFromCart', (data: { id: string }) => {
     cartModel.removeItemById(data.id); 
 });
 
+// Открытие корзины
 events.on('basket:open', () => {
     const basketElement = cloneTemplate<HTMLElement>(basketTemplate);
     
@@ -164,7 +157,8 @@ events.on('basket:open', () => {
 
     modal.open(basketElement);
 });
-//  Нажатие кнопки оформления заказа
+
+// Нажатие кнопки оформления заказа
 events.on('order:start', () => {
     const orderElement = cloneTemplate<HTMLElement>(orderTemplate);
     
@@ -190,7 +184,7 @@ events.on('order:start', () => {
     }
 });
 
-// 10. Нажатие кнопки перехода ко второй форме оформления заказа
+// Нажатие кнопки перехода 
 events.on('order:submit', () => {
     const contactsElement = cloneTemplate<HTMLElement>(contactsTemplate);
     
@@ -223,9 +217,10 @@ events.on('order:complete', () => {
     modal.open(successElement);
     cartModel.clear();
     customerModel.clear();
+    updateBasketCounter();
 });
 
-//  Изменение данных в формах
+// Изменение данных в формах
 events.on('order:input', (data: { payment?: TPayment; address?: string }) => {
     if (data.payment) customerModel.setPayment(data.payment);
     if (data.address) customerModel.setAddress(data.address);
@@ -235,7 +230,6 @@ events.on('contacts:input', (data: { email?: string; phone?: string }) => {
     if (data.email) customerModel.setEmail(data.email);
     if (data.phone) customerModel.setPhone(data.phone);
 });
-
 
 // Загрузка каталога с сервера
 async function initializeApp() {

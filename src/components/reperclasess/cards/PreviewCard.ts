@@ -1,8 +1,8 @@
-import { ensureElement } from "../../utils/utils";
-import { Card } from './card';
-import { IProduct } from "../../types";
+import { ensureElement } from "../../../utils/utils";
+import { Card } from '../cards/card';
+import { IProduct } from "../../../types";
 
-interface IPreviewCard {
+interface IPreviewCard {                                                             //карточка предпросмотра
     product: IProduct;
     description: string;
 }

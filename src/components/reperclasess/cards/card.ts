@@ -1,7 +1,7 @@
-import { Component } from "../base/Component";
-import { ensureElement } from "../../utils/utils";
-import { IProduct } from "../../types";
-import { categoryMap, CDN_URL } from "../../utils/constants";
+import { Component } from "../../base/Component";                                    //базовый класс Карточки  товаров
+import { ensureElement } from "../../../utils/utils";
+import { IProduct } from "../../../types";
+import { categoryMap, CDN_URL } from "../../../utils/constants";
 
 export abstract class Card<T> extends Component<T> {
     protected id: string;
