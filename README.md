@@ -193,22 +193,206 @@ protected basketButton: HTMLButtonElement;
 Методы:
  set counter(value: number) - Устанавливает значение счетчика корзины
 
+ CatalogCard 
+Создание и управление отображением каталога товаров в виде карточек на странице.
+constructor(container: HTMLElement) {
+Методы:
+renderProducts(products: IProduct[]): void -  для отображения списка товаров
+
+Параметры: принимает массив объектов товаров. Преобразует товары в HTML-элементы и отображает их в галерее
+
+setItems(nodes: HTMLElement[]): void
+ Заменяет содержимое галереи новыми элементами
+
+Параметры: массив HTML-элементов
+
+
+ clear(): void -удаляет все дочерние элементы из галереи
+ 
+ 
  abstract class Card 
   Абстрактный базовый класс карточки каталога
 
 Конструктор: (container: HTMLElement) 
 Поля:
-id: string — идентификатор товара.
-titleEl: HTMLElement — узел заголовка.
-imageEl: HTMLImageElement — узел изображения.
-categoryEl: HTMLElement — узел категории.
-priceEl: HTMLElement — узел цены.
-Методы:
-setId(id: string): void
-setTitle(title: string): void
-setImage(src: string, alt?: string): void
-setCategory(category: string): void
-setPrice(price: number | null): void — отображает «Бесценно» при null.
-onClick(handler: (id: string) => void): void — общий обработчик клика по карточке.
-render(data: TCard): HTMLElement — 
+id: string - идентификатор товара
+titleElement: HTMLElement - элемент для отображения названия
+imageElement?: HTMLImageElement - опциональный элемент изображения
+categoryElement?: HTMLElement - опциональный элемент категории
+priceElement: HTMLElement - элемент для отображения цены
+Сеттер product
+typescript
 
+МЕТОДЫ:
+set product(data: IProduct): void - Основной метод для установки данных товара
+ setId(id: string): void - Устанавливает ID товара
+ setTitle(title: string): void - Устанавливает текст названия товара
+ setImageSrc(src: string, alt?: string): void-Устанавливает источник изображения
+ setCategory(category: string): void-Устанавливает категорию товара
+ setPrice(price: number | null): void-Устанавливает цену товара
+ onClick(handler: (id: string) => void): void-Добавляет обработчик клика на карточку
+
+Класс CatalogItem предназначен для отображения карточек товаров в каталоге с функциональностью добавления/удаления из корзины.,
+constructor(container: HTMLElement) - конструктор
+Поля:
+id: string
+titleElement: HTMLElement
+imageElement?: HTMLImageElement
+categoryElement?: HTMLElement
+priceElement: HTMLElement
+Добавленные в CatalogItem:
+buttonElement: HTMLButtonElement - кнопка добавления в корзину
+методы:
+setInCart(inCart: boolean): void
+typescript
+setInCart(inCart: boolean): void- Обновляет состояние кнопки корзины
+- onAddToCart(handler: (id: string) => void): void
+typescript
+onAddToCart(handler: (id: string) => void): void-Добавляет обработчик клика на кнопку корзины
+-render(data: IProduct): HTMLElement
+typescript
+render(data: IProduct): HTMLElement -Основной метод для отрисовки карточки товара
+
+Класс PreviewCard - карточка предпросмотра товара.
+Класс предназначен для отображения детальной информации о товаре в режиме предпросмотра
+constructor(container: HTMLElement, onAddToBasket?: () => void)- конструктор
+Параметры:
+
+container: HTMLElement - DOM-элемент контейнера карточки
+onAddToBasket?: () => void - опциональный обработчик добавления в корзину
+
+Методы:
+Сеттер  set description(value: string): void - Устанавливает текст описания товара
+
+Унаследованные методы от Card<IPreviewCard>:
+set product(data: IPreviewCard) - основной метод установки данных
+setId(id: string)
+setTitle(title: string)
+setImageSrc(src: string, alt?: string)
+setCategory(category: string)
+
+Класс BasketCard - карточка товара в корзине
+Класс предназначен для отображения товаров в корзине покупок. 
+constructor(container: HTMLElement, onDelete?: () => void) - конструктор
+Параметры:
+container: HTMLElement - DOM-элемент контейнера карточки товара в корзине
+onDelete?: () => void - опциональный обработчик удаления товара из корзины
+
+Методы:
+Сеттер index
+set index(value: number): void -Устанавливает порядковый номер товара в списке корзины
+
+Унаследованные методы от Card<IBasketCard>:
+set product(data: IBasketCard) - основной метод установки данных товара в корзине
+setId(id: string) - установка идентификатора
+setTitle(title: string) - установка названия товара
+setImageSrc(src: string, alt?: string) - установка изображения
+setCategory(category: string) - установка категории
+setPrice(price: number | null) - установка цены
+onClick(handler: (id: string) => void) - обработчик клика по карточке
+
+Класс Modal - модальное окно
+Класс предназначен для управления модальными (всплывающими) окнами на веб-странице. 
+
+constructor(container: HTMLElement, onClose?: () => void)-конструктор
+Параметры
+container: HTMLElement - DOM-элемент контейнера модального окна
+onClose?: () => void - опциональный колбэк, вызываемый при закрытии модалки
+
+Методы:
+Приватные методы:
+1. setupEventListeners(onClose?: () => void): void
+ Настраивает все обработчики событий для модального окна
+ Реализует три способа закрытия:
+ По клику на кнопку закрытия
+ По клику на оверлей (фон)
+ По клавише ESC
+
+Публичные методы:
+2. open(content: HTMLElement): void
+ Открывает модальное окно с переданным содержимым
+
+Параметры: content - HTML-элемент для отображения внутри модалки
+Очищает предыдущее содержимое
+Добавляет новое содержимое
+Добавляет CSS-класс modal_active для показа
+Устанавливает флаг isOpen = true
+
+3. close(): void
+typescript
+close(): void
+ Закрывает модальное окно
+
+Действия:
+Убирает CSS-класс modal_active для скрытия
+Очищает содержимое
+Устанавливает флаг isOpen = false
+
+ФОРМЫ:
+Класс Form<T> - абстрактная базовая форма
+Абстрактный класс предназначен для создания интерактивных форм с валидацией. 
+
+Конструктор:
+constructor(container: HTMLFormElement)
+Параметры:
+container: HTMLFormElement - DOM-элемент формы (тег <form>)
+Методы:
+Публичные методы:
+1. setDisabled(disabled: boolean): void- Блокирует или разблокирует кнопку отправки формы
+2. setErrors(errors: Record<string, string>): void - Назначение: Отображает ошибки валидации в форме
+Абстрактные методы:
+3. validate(): boolean
+protected abstract validate(): boolean- Абстрактный метод для реализации валидации формы
+
+Класс ContactsForm - форма контактов
+Конкретная реализация формы для ввода контактных данных (email и телефон).
+
+Конструктор:
+constructor(
+    container: HTMLFormElement,
+    protected onSubmit: () => void,
+    protected onInput?: (data: Partial<IContactsFormData>) => void
+)
+Параметры:
+container: HTMLFormElement - DOM-элемент формы
+onSubmit: () => void - обязательный обработчик отправки формы
+onInput?: (data: Partial<IContactsFormData>) => void - опциональный обработчик ввода данных
+
+Методы:
+Приватные методы:
+1. setupValidation(): void
+Назначение: Настраивает валидацию формы в реальном времени
+
+Логика:
+
+Добавляет обработчики input на оба поля
+
+При каждом вводе вызывает валидацию
+
+Вызывает onInput с текущими данными
+
+2. setupSubmit(): void
+Назначение: Настраивает обработку отправки формы
+
+Логика:
+
+Предотвращает стандартную отправку формы
+
+Вызывает валидацию
+
+Если форма валидна - вызывает onSubmit
+
+Публичные методы:
+3. setEmail(email: string): void
+typescript
+setEmail(email: string): void
+Назначение: Устанавливает значение email и запускает валидацию
+
+Использование: для программного заполнения поля
+
+4. setPhone(phone: string): void
+typescript
+setPhone(phone: string): void
+Назначение: Устанавливает значение телефона и запускает валидацию
+
+Использование: для программного заполнения поля
