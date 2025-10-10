@@ -127,7 +127,7 @@ export function createElement<
                 // @ts-expect-error fix indexing later
                 element[key] = isBoolean(value) ? value : String(value);
             }
-        }
+        } 
     }
     if (children) {
         for (const child of Array.isArray(children) ? children : [children]) {

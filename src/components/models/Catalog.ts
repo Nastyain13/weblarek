@@ -1,13 +1,19 @@
 
 import { IProduct } from '../../types/index';
+import {  EventEmitter } from "../base/Events";
 
-export class Catalog {
+export class Catalog extends EventEmitter  {
   private products: IProduct[] = [];
   private selectedProduct: IProduct | null = null;
+
+  
+  
 
   // Сохранение массива товаров полученного в парметрах метода      8 спринт 5.введение в ОПП, урок 4 поля и методы 
   setProducts(products: IProduct[]): void {                        // сеттер (записать/установить данные)
     this.products = products;
+    // Генерируем событие при изменении товаров
+    this.emit('products:changed', this.products);
   }
 
   // Получение массива товаров из модели                 геттер(прочитать получить данные)

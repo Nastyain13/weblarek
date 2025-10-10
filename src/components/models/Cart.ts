@@ -1,45 +1,49 @@
 import { IProduct } from '../../types/index';
-// Хранит массив товаров, выбранных покупателем для покупки
+import { EventEmitter } from "../base/Events";
 
-export class Cart {
+export class Cart extends EventEmitter {
   private items: IProduct[] = [];
 
-  // Получение массива товаров, которые находятся в корзине
   getItems(): IProduct[] {
     return this.items;
   }
 
-  // Добавление товара, который был получен в параметре, в массив корзины
   addItem(product: IProduct): void {
     this.items.push(product);
+    this.emit('cart:changed'); 
   }
 
-  // Удаление товара, полученного в параметре из массива корзины
   removeItem(product: IProduct): void {
     const index = this.items.findIndex(item => item.id === product.id);
     if (index !== -1) {
       this.items.splice(index, 1);
+      this.emit('cart:changed'); 
     }
   }
 
-  // Очистка корзины
-  clear(): void {
-    this.items = [];
+  removeItemById(productId: string): void {
+    const index = this.items.findIndex(item => item.id === productId);
+    if (index !== -1) {
+      this.items.splice(index, 1);
+      this.emit('cart:changed'); 
+    }
   }
 
-  // Получение стоимости всех товаров в корзине
+  clear(): void {
+    this.items = [];
+    this.emit('cart:changed'); 
+  }
+
   getTotalPrice(): number {
     return this.items.reduce((total, item) => {
       return total + (item.price || 0);
     }, 0);
   }
 
-  // Получение количества товаров в корзине
   getItemsCount(): number {
     return this.items.length;
   }
 
-  // Проверка наличия товара в корзине по его id, полученного в параметр метода
   hasItem(productId: string): boolean {
     return this.items.some(item => item.id === productId);
   }

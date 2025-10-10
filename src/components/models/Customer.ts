@@ -1,6 +1,7 @@
-
 import { IBuyer, IValidationResult, TPayment } from '../../types/index';
-export class Customer {
+import { EventEmitter } from "../base/Events";
+
+export class Customer extends EventEmitter {
   private payment: TPayment | null = null;
   private email: string = '';
   private phone: string = '';
@@ -8,27 +9,57 @@ export class Customer {
 
   // Сохранение данных покупателя (общий метод)
   setData(data: Partial<IBuyer>): void {
-    if (data.payment !== undefined) this.payment = data.payment;
-    if (data.email !== undefined) this.email = data.email;
-    if (data.phone !== undefined) this.phone = data.phone;
-    if (data.address !== undefined) this.address = data.address;
+    let changed = false;
+    
+    if (data.payment !== undefined && this.payment !== data.payment) {
+      this.payment = data.payment;
+      changed = true;
+    }
+    if (data.email !== undefined && this.email !== data.email) {
+      this.email = data.email;
+      changed = true;
+    }
+    if (data.phone !== undefined && this.phone !== data.phone) {
+      this.phone = data.phone;
+      changed = true;
+    }
+    if (data.address !== undefined && this.address !== data.address) {
+      this.address = data.address;
+      changed = true;
+    }
+
+    if (changed) {
+      this.emit('customer:changed');
+    }
   }
 
   // Сохранение отдельных полей
   setPayment(payment: TPayment): void {
-    this.payment = payment;
+    if (this.payment !== payment) {
+      this.payment = payment;
+      this.emit('customer:changed');
+    }
   }
 
   setEmail(email: string): void {
-    this.email = email;
+    if (this.email !== email) {
+      this.email = email;
+      this.emit('customer:changed');
+    }
   }
 
   setPhone(phone: string): void {
-    this.phone = phone;
+    if (this.phone !== phone) {
+      this.phone = phone;
+      this.emit('customer:changed');
+    }
   }
 
   setAddress(address: string): void {
-    this.address = address;
+    if (this.address !== address) {
+      this.address = address;
+      this.emit('customer:changed');
+    }
   }
 
   // Получение всех данных покупателя
@@ -61,6 +92,7 @@ export class Customer {
     this.email = '';
     this.phone = '';
     this.address = '';
+    this.emit('customer:changed');
   }
 
   // Проверка, все ли данные заполнены
@@ -103,4 +135,3 @@ export class Customer {
     };
   }
 }
-
