@@ -1,32 +1,31 @@
-import { ensureElement } from "../../utils/utils";
-import { Card } from './cards/card';
-import { IProduct } from "../../types";
+import { ensureElement } from "../../../utils/utils";
+import { Card } from './card';
+import { IProduct } from "../../../types";
 
-interface IBasketCard {
-    product: IProduct;
-    index: number;
-}
-export class BasketCard extends Card<IBasketCard> {
+export class BasketCard extends Card<IProduct> {
     protected indexElement: HTMLElement;
     protected deleteButton: HTMLButtonElement; 
+    
 
-    constructor(container: HTMLElement, onDelete?: () => void) {
+    constructor(container: HTMLElement, onDelete?: (id: string) => void)  {
         super(container);
-        
         
         this.indexElement = ensureElement<HTMLElement>('.basket__item-index', this.container);
         this.deleteButton = ensureElement<HTMLButtonElement>('.basket__item-delete', this.container);
         
+        
         if (onDelete) {
             this.deleteButton.addEventListener('click', (event) => {
                 event.preventDefault();
-                onDelete();
+                onDelete(this.id);
             });
         }
     }
 
-    set index(value: number) {
-        this.indexElement.textContent = String(value);
+    setIndex(index: number): void {
+        if (this.indexElement) {
+            this.indexElement.textContent = String(index);
+        }
     }
+
 }
-    

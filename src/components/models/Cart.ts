@@ -13,14 +13,7 @@ export class Cart extends EventEmitter {
     this.emit('cart:changed'); 
   }
 
-  removeItem(product: IProduct): void {
-    const index = this.items.findIndex(item => item.id === product.id);
-    if (index !== -1) {
-      this.items.splice(index, 1);
-      this.emit('cart:changed'); 
-    }
-  }
-
+ 
   removeItemById(productId: string): void {
     const index = this.items.findIndex(item => item.id === productId);
     if (index !== -1) {

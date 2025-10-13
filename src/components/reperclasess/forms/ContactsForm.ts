@@ -1,5 +1,7 @@
-import { Form } from './Form';
+  import { Form } from './Form'; 
 import { ensureElement } from "../../../utils/utils";
+
+
 
 interface IContactsFormData {
     email: string;
@@ -11,51 +13,51 @@ export class ContactsForm extends Form<IContactsFormData> {
     protected phoneInput: HTMLInputElement;
 
     constructor(
-        container: HTMLFormElement,
-        protected onSubmit: () => void,
-        protected onInput?: (data: Partial<IContactsFormData>) => void
+        container: HTMLElement,
+        onFormSubmit?: () => void,
+        onFormChange?: (formData: Partial<IContactsFormData>) => void
     ) {
-        super(container); // конструктор родительского класса Form
+        super(container, onFormSubmit, onFormChange);
         
-        this.emailInput = ensureElement<HTMLInputElement>('input[name="email"]', this.container);
-        this.phoneInput = ensureElement<HTMLInputElement>('input[name="phone"]', this.container);
-        
-        this.setupValidation();
-        this.setupSubmit();
+        this.emailInput = ensureElement<HTMLInputElement>('input[name="email"]', container);
+        this.phoneInput = ensureElement<HTMLInputElement>('input[name="phone"]', container);
     }
 
-    private setupValidation(): void {                                          // проверятся валидность
-        [this.emailInput, this.phoneInput].forEach(input => {                   // массив из двух полей e-mail и телефон
-            input.addEventListener('input', () => {                            
-                this.validate();
-                this.onInput?.({
-                    email: this.emailInput.value,
-                    phone: this.phoneInput.value                           
-                });
-            });
-        });
+    // Реализация абстрактного метода для получения данных формы
+    protected getFormData(): Partial<IContactsFormData> {
+        return {
+            email: this.emailInput.value,
+            phone: this.phoneInput.value
+        };
     }
 
-    private setupSubmit(): void {                                        
-        this.formElement.addEventListener('submit', (event) => {             
-            event.preventDefault();
-            if (this.validate()) {
-                this.onSubmit();
-            }
-        });
-    }
-
-   
-
-    setEmail(email: string): void {      // Устанавливает значение поля e-mail, и phone  и проверяет на валидность
+    // Методы для установки значений
+    setEmail(email: string): void {
         this.emailInput.value = email;
-        this.validate();
     }
 
     setPhone(phone: string): void {
         this.phoneInput.value = phone;
-        this.validate();
     }
 
-  
+    // Метод для отображения ошибок из модели
+    displayErrors(errors: Partial<Record<keyof IContactsFormData, string>>): void {
+        const errorMessages = Object.values(errors).filter(Boolean);
+        this.errorContainer.textContent = errorMessages.join("\n");
+    }
+
+    // Очистка формы
+    clear(): void {
+        this.emailInput.value = '';
+        this.phoneInput.value = '';
+    }
+
+    // Получение полных данных формы
+    getFormValues(): IContactsFormData {
+        const data = this.getFormData();
+        return {
+            email: data.email || '',
+            phone: data.phone || ''
+        };
+    }
 }
