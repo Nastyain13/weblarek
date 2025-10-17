@@ -5,7 +5,6 @@ import { IProduct } from "../../../types";
 export class BasketCard extends Card<IProduct> {
     protected indexElement: HTMLElement;
     protected deleteButton: HTMLButtonElement; 
-    
 
     constructor(container: HTMLElement, onDelete?: (id: string) => void)  {
         super(container);
@@ -13,19 +12,17 @@ export class BasketCard extends Card<IProduct> {
         this.indexElement = ensureElement<HTMLElement>('.basket__item-index', this.container);
         this.deleteButton = ensureElement<HTMLButtonElement>('.basket__item-delete', this.container);
         
-        
         if (onDelete) {
             this.deleteButton.addEventListener('click', (event) => {
                 event.preventDefault();
-                onDelete(this.id);
+                onDelete(this._id); 
             });
         }
     }
 
-    setIndex(index: number): void {
+    set index(value: number) {
         if (this.indexElement) {
-            this.indexElement.textContent = String(index);
+            this.indexElement.textContent = String(value);
         }
     }
-
 }

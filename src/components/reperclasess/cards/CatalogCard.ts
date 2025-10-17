@@ -1,6 +1,7 @@
 import { Card } from "./card";
 import { IProduct } from "../../../types";
 import { ensureElement } from "../../../utils/utils";
+import { categoryMap } from "../../../utils/constants"; 
 
 export class CatalogCard extends Card<IProduct> {
     protected categoryElement: HTMLElement;
@@ -15,18 +16,30 @@ export class CatalogCard extends Card<IProduct> {
         if (onSelect) {
             this.container.addEventListener("click", (e) => {
                 e.preventDefault();
-                onSelect(this["id"]);
+                onSelect(this._id);
             });
         }
     }
 
-   
-    setCategory(category: string): void {
-        this.categoryElement.textContent = category;
+    
+    set category(value: string) {
+        if (this.categoryElement) {
+            this.categoryElement.textContent = value;
+            this.categoryElement.className = "card__category";
+            
+            const modifier = categoryMap[value as keyof typeof categoryMap] || categoryMap['другое'];
+            this.categoryElement.classList.add(modifier);
+        }
+    }
+
+    // Сеттер для изображения  
+    set image(value: string) {
+        this.imageElement.src = value;
+        this.imageElement.alt = this.titleElement?.textContent || '';
     }
 
     setImageSrc(src: string, alt: string): void {
-        this.imageElement.src = src;
+        this.image = src;
         this.imageElement.alt = alt;
     }
 }

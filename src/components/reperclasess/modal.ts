@@ -41,7 +41,7 @@ export class Modal extends Component<void> {
     }
 
     open(content: HTMLElement): void {
-        // Исправляем replaceChildren
+        
         this.contentElement.innerHTML = '';
         this.contentElement.appendChild(content);
         this.container.classList.add("modal_active");

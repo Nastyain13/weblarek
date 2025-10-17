@@ -2,12 +2,12 @@ import { IBuyer, IValidationResult, TPayment } from '../../types/index';
 import { EventEmitter } from "../base/Events"; 
  
 export class Customer extends EventEmitter { 
-  private payment: TPayment = "online"; 
+  private payment: TPayment | null = null; 
   private email: string = ''; 
   private phone: string = ''; 
   private address: string = ''; 
  
-  // Сохранение данных покупателя (общий метод) 
+  // Сохранение данных покупателя
   setData(data: Partial<IBuyer>): void { 
     let changed = false; 
      
@@ -36,45 +36,42 @@ export class Customer extends EventEmitter {
   // Получение всех данных покупателя 
   getData(): IBuyer { 
     return { 
-      payment: this.payment, 
+      payment: this.payment || "online",
       email: this.email, 
       phone: this.phone, 
       address: this.address 
     }; 
   } 
  
+  
+  get contacts(): { email: string; phone: string } {
+    return {
+      email: this.email,
+      phone: this.phone
+    };
+  }
+
   // Очистка данных покупателя 
   clear(): void { 
-    this.payment = "online"; 
+    this.payment = null; 
     this.email = ''; 
     this.phone = ''; 
     this.address = ''; 
     this.emit('customer:changed', this.getData()); 
   } 
  
-  // Валидация данных 
-  validate(): IValidationResult { 
+  validateOrder(): IValidationResult { 
     const errors: IValidationResult['errors'] = {}; 
- 
-    if (!this.payment) { 
-      errors.payment = 'Способ оплаты не выбран'; 
-    } 
- 
-    if (!this.email.trim()) { 
-      errors.email = 'Email не может быть пустым'; 
-    } 
- 
-    if (!this.phone.trim()) { 
-      errors.phone = 'Телефон не может быть пустым'; 
-    } 
- 
     if (!this.address.trim()) { 
-      errors.address = 'Адрес не может быть пустым'; 
-    } 
- 
+      errors.address = 'Необходимо указать адрес'; 
+    }
     return { 
       isValid: Object.keys(errors).length === 0, 
       errors 
     }; 
   } 
-}
+} 
+  
+  
+
+

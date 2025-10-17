@@ -1,4 +1,4 @@
-  import { Form } from './Form'; 
+import { Form } from './Form'; 
 import { ensureElement } from "../../../utils/utils"; 
 import { TPayment } from "../../../types";
 
@@ -16,57 +16,59 @@ export class OrderForm extends Form<OrderFormData> {
     onFormSubmit?: () => void,
     onFormChange?: (formData: Partial<OrderFormData>) => void
   ) {
-    super(container, onFormSubmit, onFormChange);
+    super(container, onFormSubmit);
     
-    // Находим контейнер с кнопками оплаты
-    const buttonsContainer = ensureElement<HTMLElement>(
-      ".order__buttons",
-      container
-    );
+    const buttonsContainer = ensureElement<HTMLElement>(".order__buttons", container);
     
-    // Получаем все кнопки оплаты
     this.ButtonsPayment = Array.from(
       buttonsContainer.querySelectorAll("button")
     ) as HTMLButtonElement[];
     
-    // Находим поле ввода адреса
-    this.Adress = ensureElement<HTMLInputElement>(
-      'input[name="address"]',
-      container
-    );
+    this.Adress = ensureElement<HTMLInputElement>('input[name="address"]', container);
 
-    // Добавляем обработчики для кнопок оплаты
     this.ButtonsPayment.forEach((button) => {
       button.addEventListener("click", (event) => {
         event.preventDefault();
         this.selectPaymentMethod(button.name as TPayment);
-        // Вызываем колбэк изменения формы
         onFormChange && onFormChange(this.getFormData());
       });
     });
 
-    // Слушаем изменения в поле адреса
     this.Adress.addEventListener("input", () => {
       onFormChange && onFormChange(this.getFormData());
     });
   }
 
-  // Установка способа оплаты
-  setPayment(value: TPayment): void {
+  set payment(value: TPayment) {
     this.selectPaymentMethod(value);
   }
 
-  // Установка адреса
-  setAddress(value: string): void {
+  set address(value: string) {
     this.Adress.value = value;
   }
 
-  // Получение данных формы (реализация абстрактного метода)
+  set errors(value: Record<string, string>) {
+  
+    const errorMessages: string[] = [];
+    
+    if (value.payment) {
+      errorMessages.push(value.payment);
+    }
+    
+    if (value.address) {
+      errorMessages.push(value.address);
+    }
+    
+  
+    this.errorContainer.textContent = errorMessages.join('\n');
+    this.errorContainer.style.display = errorMessages.length > 0 ? 'block' : 'none';
+  }
+
   protected getFormData(): Partial<OrderFormData> {
     const activeButton = this.ButtonsPayment.find((button) =>
       button.classList.contains("button_alt-active")
     );
-    const payment = (activeButton?.name ?? "online") as TPayment;
+    const payment = (activeButton?.name ?? null) as TPayment;
     
     return {
       payment,
@@ -74,16 +76,9 @@ export class OrderForm extends Form<OrderFormData> {
     };
   }
 
-  // Выбор способа оплаты
   protected selectPaymentMethod(method: TPayment) {
     this.ButtonsPayment.forEach((button) =>
       button.classList.toggle("button_alt-active", button.name === method)
     );
   }
 }
-
-   
-  
-
-
-  

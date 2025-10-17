@@ -9,11 +9,18 @@ export class Cart extends EventEmitter {
   }
 
   addItem(product: IProduct): void {
-    this.items.push(product);
-    this.emit('cart:changed'); 
+    
+    if (product.price === null) {
+      return;
+    }
+    
+    
+    if (!this.hasItem(product.id)) {
+      this.items.push(product);
+      this.emit('cart:changed');
+    }
   }
 
- 
   removeItemById(productId: string): void {
     const index = this.items.findIndex(item => item.id === productId);
     if (index !== -1) {
