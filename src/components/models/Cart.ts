@@ -4,11 +4,11 @@ import { EventEmitter } from "../base/Events";
 export class Cart extends EventEmitter {
   private items: IProduct[] = [];
 
-  getItems(): IProduct[] {
+ public getItems(): IProduct[] {
     return this.items;
   }
 
-  addItem(product: IProduct): void {
+ public addItem(product: IProduct): void {
     
     if (product.price === null) {
       return;
@@ -21,7 +21,7 @@ export class Cart extends EventEmitter {
     }
   }
 
-  removeItemById(productId: string): void {
+  public removeItemById(productId: string): void {
     const index = this.items.findIndex(item => item.id === productId);
     if (index !== -1) {
       this.items.splice(index, 1);
@@ -29,12 +29,12 @@ export class Cart extends EventEmitter {
     }
   }
 
-  clear(): void {
+ public clear(): void {
     this.items = [];
     this.emit('cart:changed'); 
   }
 
-  getTotalPrice(): number {
+  public getTotalPrice(): number {
     return this.items.reduce((total, item) => {
       return total + (item.price || 0);
     }, 0);

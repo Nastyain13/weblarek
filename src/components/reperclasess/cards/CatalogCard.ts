@@ -13,6 +13,10 @@ export class CatalogCard extends Card<IProduct> {
         this.categoryElement = ensureElement<HTMLElement>('.card__category', this.container);
         this.imageElement = ensureElement<HTMLImageElement>('.card__image', this.container);
 
+        // ВАЖНО: ОЧИСТИТЬ СТАТИЧЕСКОЕ ИЗОБРАЖЕНИЕ
+        this.imageElement.src = '';
+        this.imageElement.alt = '';
+
         if (onSelect) {
             this.container.addEventListener("click", (e) => {
                 e.preventDefault();
@@ -21,7 +25,6 @@ export class CatalogCard extends Card<IProduct> {
         }
     }
 
-    
     set category(value: string) {
         if (this.categoryElement) {
             this.categoryElement.textContent = value;
@@ -32,14 +35,14 @@ export class CatalogCard extends Card<IProduct> {
         }
     }
 
-    // Сеттер для изображения  
-    set image(value: string) {
-        this.imageElement.src = value;
-        this.imageElement.alt = this.titleElement?.textContent || '';
-    }
+    
 
-    setImageSrc(src: string, alt: string): void {
-        this.image = src;
-        this.imageElement.alt = alt;
+    // ДОБАВИТЬ сеттер для image
+    set image(value: string) {
+        if (this.imageElement) {
+            this.imageElement.src = value;
+            // Alt будет установлен автоматически из title
+            this.imageElement.alt = this.titleElement?.textContent || 'Product image';
+        }
     }
 }

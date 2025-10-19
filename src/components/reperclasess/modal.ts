@@ -15,7 +15,7 @@ export class Modal extends Component<void> {
         this.setupEventListeners(onClose);
     }
 
-    private setupEventListeners(onClose?: () => void): void {
+    setupEventListeners(onClose?: () => void): void {
         // Закрытие по кнопке
         this.closeButton.addEventListener("click", (event) => {
             event.preventDefault();
@@ -41,6 +41,8 @@ export class Modal extends Component<void> {
     }
 
     open(content: HTMLElement): void {
+        // Блокируем скроллинг страницы
+        document.body.style.overflow = 'hidden';
         
         this.contentElement.innerHTML = '';
         this.contentElement.appendChild(content);
@@ -49,6 +51,9 @@ export class Modal extends Component<void> {
     }
 
     close(): void {
+        // Восстанавливаем скроллинг страницы
+        document.body.style.overflow = '';
+        
         this.container.classList.remove("modal_active");
         this.contentElement.innerHTML = '';
         this.isOpen = false;

@@ -8,7 +8,7 @@ export class Customer extends EventEmitter {
   private address: string = ''; 
  
   // Сохранение данных покупателя
-  setData(data: Partial<IBuyer>): void { 
+  public setData(data: Partial<IBuyer>): void { 
     let changed = false; 
      
     if (data.payment !== undefined && this.payment !== data.payment) { 
@@ -34,7 +34,7 @@ export class Customer extends EventEmitter {
   } 
  
   // Получение всех данных покупателя 
-  getData(): IBuyer { 
+  public getData(): IBuyer { 
     return { 
       payment: this.payment || "online",
       email: this.email, 
@@ -42,9 +42,8 @@ export class Customer extends EventEmitter {
       address: this.address 
     }; 
   } 
- 
   
-  get contacts(): { email: string; phone: string } {
+  public get contacts(): { email: string; phone: string } {
     return {
       email: this.email,
       phone: this.phone
@@ -52,7 +51,7 @@ export class Customer extends EventEmitter {
   }
 
   // Очистка данных покупателя 
-  clear(): void { 
+ public clear(): void { 
     this.payment = null; 
     this.email = ''; 
     this.phone = ''; 
@@ -65,13 +64,44 @@ export class Customer extends EventEmitter {
     if (!this.address.trim()) { 
       errors.address = 'Необходимо указать адрес'; 
     }
+    if (!this.payment) {
+      errors.payment = 'Выберите способ оплаты';
+    }
     return { 
       isValid: Object.keys(errors).length === 0, 
       errors 
     }; 
-  } 
-} 
-  
-  
+  }
 
+  // Валидация контактов
+  validateContacts(): IValidationResult {
+    const errors: IValidationResult['errors'] = {};
+    
+    if (!this.email.trim()) {
+      errors.email = 'Введите email';
+    } else if (!this.isValidEmail(this.email)) {
+      errors.email = 'Неверный формат email';
+    }
+    
+    if (!this.phone.trim()) {
+      errors.phone = 'Введите телефон';
+    } else if (!this.isValidPhone(this.phone)) {
+      errors.phone = 'Неверный формат телефона';
+    }
+    
+    return {
+      isValid: Object.keys(errors).length === 0,
+      errors
+    };
+  }
 
+  private isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  private isValidPhone(phone: string): boolean {
+    const digitsOnly = phone.replace(/\D/g, '');
+    return digitsOnly.length >= 10;
+  }
+}
