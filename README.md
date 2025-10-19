@@ -374,8 +374,300 @@ protected abstract getFormData(): T
 
 Возвращает данные формы в типизированном виде
 
+OrderForm (Форма заказа)
+Назначение:
+Форма первого шага оформления заказа. Управляет выбором способа оплаты и вводом адреса доставки.
 
- 
+Поля:
+protected ButtonsPayment: HTMLButtonElement[]
+
+Массив кнопок выбора способа оплаты
+
+protected Adress: HTMLInputElement
+
+Поле ввода адреса доставки
+
+Конструктор:
+constructor(
+  container: HTMLElement, 
+  onFormSubmit?: () => void, 
+  onFormChange?: (formData: Partial<OrderFormData>) => void
+)
+onFormChange - callback при изменении данных формы
+
+Логика конструктора:
+
+Находит контейнер с кнопками оплаты
+
+Находит поле ввода адреса
+
+Настраивает обработчики для кнопок оплаты и поля адреса
+
+Методы:
+set payment(value: TPayment)
+
+Сеттер для программного выбора способа оплаты
+
+set address(value: string)
+
+Сеттер для установки значения адреса
+
+set errors(value: Record<string, string>)
+
+Переопределенный сеттер для отображения ошибок оплаты и адреса
+
+protected getFormData(): OrderFormData
+
+Реализация абстрактного метода - возвращает полные данные формы
+
+protected getPartialFormData(): Partial<OrderFormData>
+
+Вспомогательный метод - возвращает частичные данные для onFormChange
+
+protected selectPaymentMethod(method: TPayment)
+
+Внутренний метод - переключает активное состояние кнопок оплаты
+ContactsForm (Форма контактов)
+Назначение:
+Форма второго шага оформления заказа для ввода контактных данных (email и телефон).
+
+Поля:
+protected emailInput: HTMLInputElement
+
+Поле ввода email
+
+protected phoneInput: HTMLInputElement
+
+Поле ввода телефона
+
+protected onFormChange?: (data: Partial<IContactsFormData>) => void
+
+Опциональный callback для обработки изменений данных формы
+
+Конструктор:
+constructor(
+  container: HTMLElement, 
+  onFormSubmit?: () => void,
+  onFormChange?: (data: Partial<IContactsFormData>) => void 
+)
+Логика конструктора:
+
+Находит поля ввода email и телефона
+
+Сохраняет callback для изменений
+
+Настраивает обработчики input событий для полей
+
+Методы:
+set email(value: string)
+
+Сеттер для установки значения email
+
+set phone(value: string)
+
+Сеттер для установки значения телефона
+
+protected getFormData(): IContactsFormData
+
+Реализация абстрактного метода - возвращает данные формы
+
+validateContacts(): { isValid: boolean; errors: Record<string, string> }
+
+Публичный метод валидации контактных данных
+
+Проверяет заполненность и формат email/телефона
+
+private handleInputChange(): void
+
+Внутренний метод обработки изменений полей
+
+Вызывает onFormChange и обновляет состояние формы
+
+private isValidEmail(email: string): boolean
+
+Внутренний метод проверки формата email
+
+private isValidPhone(phone: string): boolean
+
+Внутренний метод проверки формата телефона
+
+BasketView (Представление корзины)
+Назначение:
+Визуальное представление корзины товаров. Отображает список товаров, общую сумму и управляет состоянием кнопки оформления заказа.
+
+Поля:
+protected basketContainer: HTMLElement
+
+Контейнер для списка товаров в корзине (селектор .basket__list)
+
+protected totalPrice: HTMLElement
+
+Элемент для отображения общей суммы заказа (селектор .basket__price)
+
+protected basketButton: HTMLButtonElement
+
+Кнопка оформления заказа (селектор .basket__button)
+
+protected events: EventEmitter
+
+Система событий для коммуникации с другими компонентами
+
+Конструктор:
+
+constructor(container: HTMLElement, protected events: EventEmitter)
+
+Методы:
+set basketList(items: HTMLElement[])
+
+Сеттер для обновления списка товаров в корзине
+
+Заменяет все дочерние элементы в контейнере
+
+set total(value: number)
+
+Сеттер для установки общей суммы заказа
+
+Форматирует и отображает сумму в "синапсах"
+
+set state(value: boolean)
+
+Сеттер для управления состоянием корзины
+
+value = true - корзина пуста, показывает сообщение и блокирует кнопку
+
+value = false - корзина не пуста, разблокирует кнопку
+
+Gallery (Галерея/Каталог товаров)
+Назначение:
+Компонент для отображения и управления каталогом товаров. Отвечает за рендеринг списка товаров в виде галереи.
+
+Поля:
+protected Catalog: HTMLElement
+
+Контейнер для отображения каталога товаров (селектор .gallery)
+
+Конструктор:
+constructor(container: HTMLElement)
+Логика конструктора:
+
+Принимает DOM-контейнер галереи
+
+Находит элемент каталога внутри контейнера
+
+Методы:
+setItems(nodes: HTMLElement[]): void
+
+Публичный метод для установки списка товаров
+
+Полностью заменяет содержимое каталога переданными элементами
+
+Использует replaceChildren() для эффективного обновления
+
+clear(): void
+
+Публичный метод для очистки каталога
+
+Удаляет все дочерние элементы из контейнера
+
+Modal (Модальное окно)
+Назначение:
+Универсальный компонент модального окна для отображения различного контента поверх основного интерфейса.
+
+Поля:
+protected contentElement: HTMLElement
+
+Контейнер для контента модального окна (селектор .modal__content)
+
+protected closeButton: HTMLButtonElement
+
+Кнопка закрытия модального окна (селектор .modal__close)
+
+protected isOpen: boolean = false
+
+Флаг состояния модального окна (открыто/закрыто)
+
+Конструктор:
+constructor(container: HTMLElement, onClose?: () => void)
+Методы:
+setupEventListeners(onClose?: () => void): void
+
+Внутренний метод настройки обработчиков событий:
+
+ Клик по кнопке закрытия
+
+ Клик по оверлею (вне контента)
+
+Esc - закрытие по клавише Escape
+
+open(content: HTMLElement): void
+
+Публичный метод открытия модального окна
+
+Блокирует скроллинг страницы
+
+Очищает и заполняет контент
+
+Добавляет CSS-класс для отображения
+
+close(): void
+
+Публичный метод закрытия модального окна
+
+
+
+OrderSucsess (Успешное оформление заказа)
+Назначение:
+Компонент для отображения страницы успешного завершения заказа. Показывает подтверждение оплаты и сумму списания.
+
+Поля:
+protected headerElement: HTMLElement
+
+Заголовок успешного заказа (селектор .order-success__title)
+
+protected summaryElement: HTMLElement
+
+Элемент для отображения суммы списания (селектор .order-success__description)
+
+protected actionButton: HTMLButtonElement
+
+Кнопка закрытия/продолжения (селектор .order-success__close)
+
+Конструктор:
+
+constructor(template: HTMLTemplateElement, onDismiss?: () => void)
+
+Методы:
+updateTotalAmount(amount: number): void
+
+Публичный метод для обновления информации о сумме заказа
+
+Форматирует и отображает сообщение "Списано X синапсов"
+
+События в приложении
+Загрузка данных
+catalog:changed - каталог товаров обновлен
+
+Работа с товарами
+product:selected - выбран товар для просмотра
+
+cart:changed - изменено содержимое корзины
+
+Корзина
+basket:open - открытие корзины
+
+Оформление заказа
+order:open - открытие формы заказа (1 шаг)
+
+contacts:open - открытие формы контактов (2 шаг)
+
+order:success - успешное оформление заказа
+
+Уведомления
+notification:show - показать уведомление
+
+Модальные окна
+modal:closed - модальное окно закрыто
+
 
 
 
