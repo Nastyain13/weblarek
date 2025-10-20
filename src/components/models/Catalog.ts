@@ -28,7 +28,8 @@ export class Catalog extends EventEmitter  {
 
   // Сохранение товара для подробного отображения                       // 8спринт 5. введенеие в ООП, урок 3 синтаксис классов , методы класса    
   setSelectedProduct(product: IProduct): void {                                
-    this.selectedProduct = product;               //сохраняет один конкретный товар в  свойстве
+    this.selectedProduct = product;    //генерируем событие при изменении данного товара
+    this.emit('product:selected', this.selectedProduct);           //сохраняет один конкретный товар в  свойстве
   }
 
   // Получение товара для подробного отображения

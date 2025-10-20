@@ -26,23 +26,28 @@ export class BasketView extends Component<IBasketView> {
     } 
 
     set basketList(items: HTMLElement[]) { 
+        // Очищаем контейнер перед добавлением новых элементов
+        this.basketContainer.innerHTML = '';
         this.basketContainer.replaceChildren(...items); 
     } 
 
     set total(value: number) { 
-       
         this.totalPrice.textContent = `${value} синапсов`; 
     } 
 
     set state(value: boolean) { 
         if (value) { 
+            // Корзина пуста - очищаем и показываем сообщение
+            this.basketContainer.innerHTML = '';
             const emptyElement = document.createElement('p'); 
             emptyElement.style.color = 'rgba(255, 255, 255, 0.3)'; 
             emptyElement.textContent = 'Корзина пуста'; 
-            this.basketContainer.append(emptyElement); 
-            this.basketButton.disabled = value; 
+            this.basketContainer.append(emptyElement);
+            this.basketButton.disabled = true; 
         } else { 
-            this.basketButton.disabled = value; 
+            // Корзина не пуста - кнопка активна
+            this.basketButton.disabled = false; 
+            
         } 
     } 
-} 
+}

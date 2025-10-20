@@ -29,6 +29,7 @@ export class Customer extends EventEmitter {
     } 
  
     if (changed) { 
+      // Генерируем событие при изменении данных
       this.emit('customer:changed', this.getData()); 
     } 
   } 
@@ -43,15 +44,13 @@ export class Customer extends EventEmitter {
     }; 
   } 
   
-  public get contacts(): { email: string; phone: string } {
-    return {
-      email: this.email,
-      phone: this.phone
-    };
+  // Получение текущих данных (без обязательных полей)
+  public getCurrentData(): Partial<IBuyer> {
+    return this.getData();
   }
 
   // Очистка данных покупателя 
- public clear(): void { 
+  public clear(): void { 
     this.payment = null; 
     this.email = ''; 
     this.phone = ''; 
@@ -59,49 +58,41 @@ export class Customer extends EventEmitter {
     this.emit('customer:changed', this.getData()); 
   } 
  
-  validateOrder(): IValidationResult { 
+  
+// Валидация только для формы заказа
+  public validateOrder(): IValidationResult { 
     const errors: IValidationResult['errors'] = {}; 
+
+    if (!this.payment) { 
+      errors.payment = "Выберите способ оплаты";
+    }
+
     if (!this.address.trim()) { 
-      errors.address = 'Необходимо указать адрес'; 
+      errors.address = "Необходимо указать адрес";
     }
-    if (!this.payment) {
-      errors.payment = 'Выберите способ оплаты';
-    }
+
+    
     return { 
       isValid: Object.keys(errors).length === 0, 
       errors 
     }; 
   }
 
-  // Валидация контактов
-  validateContacts(): IValidationResult {
-    const errors: IValidationResult['errors'] = {};
-    
-    if (!this.email.trim()) {
-      errors.email = 'Введите email';
-    } else if (!this.isValidEmail(this.email)) {
-      errors.email = 'Неверный формат email';
-    }
-    
-    if (!this.phone.trim()) {
-      errors.phone = 'Введите телефон';
-    } else if (!this.isValidPhone(this.phone)) {
-      errors.phone = 'Неверный формат телефона';
-    }
-    
-    return {
-      isValid: Object.keys(errors).length === 0,
-      errors
-    };
-  }
+  // Валидация только для формы контактов
+  public validateContacts(): IValidationResult { 
+    const errors: IValidationResult['errors'] = {}; 
 
-  private isValidEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
+    if (!this.email.trim()) { 
+      errors.email = "Введите  e-mail";
+    }
 
-  private isValidPhone(phone: string): boolean {
-    const digitsOnly = phone.replace(/\D/g, '');
-    return digitsOnly.length >= 10;
+    if (!this.phone.trim()) { 
+      errors.phone = "Введите  телефон";
+    }
+
+    return { 
+      isValid: Object.keys(errors).length === 0, 
+      errors 
+    }; 
   }
 }

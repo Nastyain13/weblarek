@@ -29,8 +29,4 @@ export abstract class Card<T extends IProduct> extends Component<T> {
     }
 
    
-    
-    onClick(handler: (id: string) => void): void {
-        this.container.addEventListener("click", () => handler(this._id));
-    }
 }
